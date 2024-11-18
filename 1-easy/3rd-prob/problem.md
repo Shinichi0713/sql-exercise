@@ -1,7 +1,7 @@
 # 問題
+
 書籍一覧をカテゴリー毎に集計して多い順に、カテゴリー名は昇順に並び替えてください。データの取得件数は先頭から3件のみにしてください。
 出力項目はname(カテゴリー名)とnum(書籍数)です。
-
 
 # テーブル
 
@@ -17,3 +17,17 @@ id	name	release_year	total_page
 6	世界一周マップ	2005	187
 
 
+## 結果
+
+
+![1731932642768](image/problem/1731932642768.png)
+
+
+```
+select categories.name, count(categories.name) as num from books 
+left join book_categories on books.id = book_categories.book_id 
+left join categories on categories.id = book_categories.category_id 
+group by categories.name 
+order by num desc,  categories.name 
+limit 3;
+```
