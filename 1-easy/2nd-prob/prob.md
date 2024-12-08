@@ -22,3 +22,10 @@ select name, total_page from books order by total_page desc
 ```
 
 ![alt text]({9B4DA8F0-FB66-4F82-A3CF-6D90912AF73C}.png)
+
+
+retry 24/12/08
+```
+select name, total_page from books 
+order by total_page desc;
+```
