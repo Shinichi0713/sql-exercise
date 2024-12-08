@@ -34,9 +34,28 @@ order by num desc,  categories.name
 limit 3;
 ```
 
+retry
+```sql
+select categories.name, count(categories.name) as num from books 
+left join book_categories on books.id=book_categories.book_id 
+left join categories on book_categories.category_id=categories.id 
+group by categories.name 
+order by num desc, categories.name 
+limit 3;
+```
+
 ## サマリー
 
 * テーブルの結合はjoin(優先するテーブルが右ならright、左ならleft)
 * グループ化したいならばgroup by
 * 並び替えするならばorder by
 * 表示件数を絞るならばlimit
+
+
+## エラー
+>ERROR:  column "categories.name" must appear in the GROUP BY clause or be used in an aggregate function
+>LINE 1: select categories.name, count(categories.name) from books  l...
+
+"""
+このエラーは、SQLのクエリで GROUP BY 句を使用する際に、SELECT 句に含まれるすべての列が GROUP BY 句に含まれていないために発生しています。具体的には、categories.name 列が GROUP BY 句に含まれていないためです。
+"""
