@@ -58,4 +58,6 @@ limit 3;
 
 """
 このエラーは、SQLのクエリで GROUP BY 句を使用する際に、SELECT 句に含まれるすべての列が GROUP BY 句に含まれていないために発生しています。具体的には、categories.name 列が GROUP BY 句に含まれていないためです。
+つまり
+countをつかう場合は、group byでグループ化が必要。
 """
