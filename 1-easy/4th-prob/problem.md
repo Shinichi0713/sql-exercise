@@ -20,6 +20,11 @@ delete from events where id=1;
 select * from events;
 ```
 
+retry
+```sql
+delete from events where id=1;
+select * from events;
+```
 
 ## 結果
 
