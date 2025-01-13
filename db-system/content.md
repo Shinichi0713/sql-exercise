@@ -24,9 +24,17 @@ https://postgresweb.com/how-to-install-postgresql13
 1. 公式ページにアクセス
 https://www.enterprisedb.com/postgresql-tutorial-resources-training-2?uuid=69f95902-b451-4735-b7e4-1b62209d4dfd&campaignId=postgres_rc_17
 
+パスワード聞かれました。
+インストール時にport聞かれました。
+※PostgreSQLのポート番号は初期値では「5432」
+![alt text](image/{EF03E3E0-B107-4F5A-9201-DC8977EB83A7}.png)
+
 2. データベース管理ツールのダウンロード
-pgadminがおすすめらしい
+pgadminがおすすめらしい(基本1をインストール時にくっついてるみたい)
+pgAdminとは、PostgreSQLのデータベース操作を画面でできるツール
 https://www.pgadmin.org/download/
+
+![alt text](image/{DD772199-677D-41B6-80AC-6970ACE1D45A}.png)
 
 3. 
 
