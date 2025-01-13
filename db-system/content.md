@@ -60,6 +60,27 @@ https://www.pgadmin.org/download/
 ![alt text](image/{DD772199-677D-41B6-80AC-6970ACE1D45A}.png)
 
 
+#### テーブルを作成する
+テーブルを作成するには主に次の2つの方法があります。
+
+① pgAdminを使い、画面から作成する
+② CREATE TABLE文を実行し作成する
+
+クエリを実行
+![alt text](image/{99430436-5E1D-4F63-BC18-DF5DA8232FF6}.png)
+
+```sql
+-- 部署マスタ（department）を作成するCREATE文
+CREATE TABLE department
+(
+    department_code character varying(10) NOT NULL,         -- 部署コード
+	department_name character varying(100),                 -- 部署名
+    CONSTRAINT pk_department PRIMARY KEY (department_code)  -- 主キー
+);
+```
+クエリを実行するとテーブルが生成されてました。
+
+
 #### pythonで操作
 ```
 pip install psycopg2
