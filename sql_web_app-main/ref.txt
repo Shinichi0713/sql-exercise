@@ -1,0 +1,14 @@
+https://qiita.com/Yu_unI1/items/316e03d94f276695ff13
+
+
+SQL（Structured Query Language）は、データベースから情報を取得したり操作したりするための言語で、以下のような代表的な操作があります1234：
+
+データの検索（SELECT）123: データベースからデータを取得するためのコマンドで、最も利用機会の多い基本中の基本です123。
+データの追加（INSERT）123: データの追加は「INSERT」コマンドで行います123。
+データの更新（UPDATE）123: データの更新は「UPDATE」コマンドで行います123。
+データの削除（DELETE）123: データの削除は「DELETE」コマンドで行います123。
+また、SQLの主なカテゴリであるDDL、DML、DCLについても詳しく説明します2。
+
+DDL（Data Definition Language）2: データベースの構造を定義するためのSQLで、テーブルの作成（CREATE）、変更（ALTER）、削除（DROP）などが含まれます2。
+DML（Data Manipulation Language）2: データを操作するためのSQLの一部で、データの選択（SELECT）、追加（INSERT）、更新（UPDATE）、削除（DELETE）などが含まれます2。
+DCL（Data Control Language）2: データベースのセキュリティと完全性を管理するためのSQLの一部で、権限の付与（GRANT）、権限の取り消し（REVOKE）、トランザクションの制御（COMMIT, ROLLBACK）などが含まれます2。
