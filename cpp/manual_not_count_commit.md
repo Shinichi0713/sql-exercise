@@ -1,64 +1,64 @@
-�͂��A**�ʂ̃A�J�E���g�i�܂��͕ʂ�Git Author���j���g���ăR�~�b�g���쐬�EPush���A�����̃A�J�E���g�̑��iContribution�O���t�j��R�~�b�g�����ɔ��f�����Ȃ��悤�ɂ��邱�Ƃ͉\**�ł��B
+はい、**別のアカウント（または別のGit Author情報）を使ってコミットを作成・Pushし、自分のアカウントの草（Contributionグラフ）やコミット履歴に反映させないようにすることは可能**です。
 
-GitHub�i�����Git�j�ɂ����āu�N�̃R�~�b�g���v�𔻒肷��d�g�݂ƁA������������ݒ���@�ɂ��ĉ�����܂��B
-
----
-
-### GitHub���R�~�b�g���A�J�E���g�ɕR�t����d�g��
-
-GitHub�́A�R�~�b�g�Ɋ܂܂�� **Git�̃��[���A�h���X�iUser Email�j** �����āA�ǂ�GitHub�A�J�E���g�̃R�~�b�g�i���EContribution�j���𔻒肵�Ă��܂��B
-
-�܂�A���[�J������Git�̃��[���A�h���X�ݒ肪������GitHub�A�J�E���g�ɕR�Â��Ă��Ȃ��A�h���X�ɂȂ��Ă���΁A���̃R�~�b�g�͎����̃A�J�E���g�̗�����Contribution�Ƃ��ăJ�E���g����܂���B
+GitHub（およびGit）において「誰のコミットか」を判定する仕組みと、それを回避する設定方法について解説します。
 
 ---
 
-### ��̓I�ȑΏ��@�E�菇
+### GitHubがコミットをアカウントに紐付ける仕組み
 
-#### ���@1: ���[�J��Git�ݒ�̃��[���A�h���X��ύX����i�ł��ȒP�E�m���j
+GitHubは、コミットに含まれる **Gitのメールアドレス（User Email）** を見て、どのGitHubアカウントのコミット（草・Contribution）かを判定しています。
 
-����̃��|�W�g���ł̂݁A������GitHub�A�J�E���g�Ƃ͖��֌W�ȃ��[���A�h���X�i�܂��͕ʃA�J�E���g�̃��[���A�h���X�j��ݒ肵�ăR�~�b�g���܂��B
+つまり、ローカル環境のGitのメールアドレス設定が自分のGitHubアカウントに紐づいていないアドレスになっていれば、そのコミットは自分のアカウントの履歴やContributionとしてカウントされません。
 
-1. **�Ώۂ̃��|�W�g���Ɉړ�����**
-2. **���̃��|�W�g�������User Email��ύX����**
+---
+
+### 具体的な対処法・手順
+
+#### 方法1: ローカルGit設定のメールアドレスを変更する（最も簡単・確実）
+
+特定のレポジトリでのみ、自分のGitHubアカウントとは無関係なメールアドレス（または別アカウントのメールアドレス）を設定してコミットします。
+
+1. **対象のレポジトリに移動する**
+2. **そのレポジトリ限定でUser Emailを変更する**
 ```bash
-git config local user.name "�ʂ̃A�J�E���g���i�C�Ӂj"
-git config local user.email "�ʂ̃A�J�E���g�̃��[���A�h���X�i�܂��͖��֌W�ȃA�h���X�j"
+git config local user.name "別のアカウント名（任意）"
+git config local user.email "別のアカウントのメールアドレス（または無関係なアドレス）"
 
 ```
 
 
-* `--global` �ł͂Ȃ� `--local` ���g�����ƂŁA���̃v���W�F�N�g�i���|�W�g���j�݂̂̐ݒ�ɂȂ�܂��B
+* `--global` ではなく `--local` を使うことで、そのプロジェクト（レポジトリ）のみの設定になります。
 
 
-3. **�ݒ���m�F����**
+3. **設定を確認する**
 ```bash
 git config user.email
 
 ```
 
 
-4. **�ʏ�ʂ�R�~�b�g�EPush����**
-* �R�~�b�g�̍쐬�ҁiAuthor�j���ύX�������[���A�h���X�ɂȂ邽�߁A������GitHub�A�J�E���g�̑��iContribution�j�ɂ͔��f����Ȃ��Ȃ�܂��B
+4. **通常通りコミット・Pushする**
+* コミットの作成者（Author）が変更したメールアドレスになるため、自分のGitHubアカウントの草（Contribution）には反映されなくなります。
 
 
 
 ---
 
-#### ���@2: �ʂ�GitHub�A�J�E���g�Ƃ���Push�EPR�쐬���s��
+#### 方法2: 別のGitHubアカウントとしてPush・PR作成を行う
 
-���S�ɕʂ̃A�J�E���g�Ƃ���GitHub��ɗ������c�������ꍇ�́A�ʃA�J�E���g�̔F�؏��iSSH�L�[�܂���Personal Access Token�j���g���đ��삵�܂��B
+完全に別のアカウントとしてGitHub上に履歴を残したい場合は、別アカウントの認証情報（SSHキーまたはPersonal Access Token）を使って操作します。
 
-1. **���[�J����Git�ݒ��ύX�i���@1�Ɠ��l�j**
-* �ʃA�J�E���g�̓o�^���[���A�h���X�ɐݒ肵�܂��B
+1. **ローカルのGit設定を変更（方法1と同様）**
+* 別アカウントの登録メールアドレスに設定します。
 
 
-2. **SSH�ڑ��ݒ�i`~/.ssh/config`�j�̐؂�ւ�**
-* �����̃��C���A�J�E���g�Ƃ͕ʂ�SSH�L�[��ݒ肵�A�ʃA�J�E���g������GitHub��Push���܂��B
+2. **SSH接続設定（`~/.ssh/config`）の切り替え**
+* 自分のメインアカウントとは別のSSHキーを設定し、別アカウント権限でGitHubへPushします。
 
 
 
 ```text
-# ~/.ssh/config �̋L�q��
+# ~/.ssh/config の記述例
 Host github.com-sub-account
   HostName github.com
   User git
@@ -67,18 +67,18 @@ Host github.com-sub-account
 ```
 
 ```bash
-# �N���[���⃊���[�gURL�̎w�莞��Host����ύX
-git remote set-url origin git@github.com-sub-account:���[�U�[��/���|�W�g����.git
+# クローンやリモートURLの指定時にHost名を変更
+git remote set-url origin git@github.com-sub-account:ユーザー名/レポジトリ名.git
 
 ```
 
 ---
 
-### ���ӓ_�E�⑫
+### 注意点・補足
 
-* **�����R�~�b�g�̍����ւ��ɂ���:**
-�ߋ��Ɏ����̃��[���A�h���X�ō쐬���Ă��܂����R�~�b�g�́A�ォ�� `git config` ��ύX���Ă�����ɂ͕ς��܂���B�ߋ��̃R�~�b�g��Author��ύX�������ꍇ�́A`git commit --amend` �� `git rebase -i` �Ȃǂŉߋ��R�~�b�g��Author�����C���i`git commit --amend --author="Name <email>"`�j������ŋ���Push����K�v������܂��B
-* **���|�W�g���̃A�N�Z�X����:**
-�ʂ̃A�J�E���g�Œ���Push����ꍇ�́A���̃��|�W�g���ɑ΂��ĕʃA�J�E���g����Collaborator�����iWrite�����j���t�^����Ă��邩�A�܂��̓t�H�[�N����Pull Request�𑗂�K�v������܂��B
-* **GPG/SSH�����iCommit Verification�j:**
-�R�~�b�g�����iVerified�o�b�W�j��ݒ肵�Ă���ꍇ�A���̏��L�҂ƃR�~�b�g���[���A�h���X�̈�v���K�v�ɂȂ�܂��̂ŁA�K�v�ɉ����Đݒ���I�t�ɂ��邩�ʌ���p�ӂ��Ă��������B
+* **既存コミットの差し替えについて:**
+過去に自分のメールアドレスで作成してしまったコミットは、後から `git config` を変更しても勝手には変わりません。過去のコミットのAuthorを変更したい場合は、`git commit --amend` や `git rebase -i` などで過去コミットのAuthor情報を修正（`git commit --amend --author="Name <email>"`）した上で強制Pushする必要があります。
+* **レポジトリのアクセス権限:**
+別のアカウントで直接Pushする場合は、そのレポジトリに対して別アカウント側にCollaborator権限（Write権限）が付与されているか、またはフォークしてPull Requestを送る必要があります。
+* **GPG/SSH署名（Commit Verification）:**
+コミット署名（Verifiedバッジ）を設定している場合、鍵の所有者とコミットメールアドレスの一致が必要になりますので、必要に応じて設定をオフにするか別鍵を用意してください。
