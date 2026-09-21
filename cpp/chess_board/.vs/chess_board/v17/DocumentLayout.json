@@ -5,6 +5,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{F7F10AFE-E31E-4653-A5A3-F67CCAC5B1DB}|chess_board\\chess_board.vcxproj|D:\\PycharmProjects\\sql-exercise\\cpp\\chess_board\\chess_board\\chess_board.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{F7F10AFE-E31E-4653-A5A3-F67CCAC5B1DB}|chess_board\\chess_board.vcxproj|solutionrelative:chess_board\\chess_board.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F7F10AFE-E31E-4653-A5A3-F67CCAC5B1DB}|chess_board\\chess_board.vcxproj|D:\\PycharmProjects\\sql-exercise\\cpp\\chess_board\\chess_board\\chess.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{F7F10AFE-E31E-4653-A5A3-F67CCAC5B1DB}|chess_board\\chess_board.vcxproj|solutionrelative:chess_board\\chess.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +18,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "chess.h",
+              "DocumentMoniker": "D:\\PycharmProjects\\sql-exercise\\cpp\\chess_board\\chess_board\\chess.h",
+              "RelativeDocumentMoniker": "chess_board\\chess.h",
+              "ToolTip": "D:\\PycharmProjects\\sql-exercise\\cpp\\chess_board\\chess_board\\chess.h",
+              "RelativeToolTip": "chess_board\\chess.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-09-21T22:23:51.393Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -24,7 +41,7 @@
               "RelativeDocumentMoniker": "chess_board\\chess_board.cpp",
               "ToolTip": "D:\\PycharmProjects\\sql-exercise\\cpp\\chess_board\\chess_board\\chess_board.cpp",
               "RelativeToolTip": "chess_board\\chess_board.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAN4BAAAAAAAAAADwv/UBAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-09-21T22:19:30.945Z",
               "EditorCaption": ""
