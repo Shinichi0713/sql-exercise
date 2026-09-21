@@ -1,4 +1,4 @@
 ﻿  chess.cpp
   chess_board.cpp
+D:\PycharmProjects\sql-exercise\cpp\chess_board\chess_board\chess_board.cpp(325,16): error C2059: 構文エラー: '定数'
   コードを生成中...
-  chess_board.vcxproj -> D:\PycharmProjects\sql-exercise\cpp\chess_board\x64\Debug\chess_board.exe
