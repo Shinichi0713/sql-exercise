@@ -21,9 +21,8 @@ GitHubは、コミットに含まれる **Gitのメールアドレス（User Ema
 1. **対象のレポジトリに移動する**
 2. **そのレポジトリ限定でUser Emailを変更する**
 ```bash
-git config local user.name "別のアカウント名（任意）"
-git config local user.email "別のアカウントのメールアドレス（または無関係なアドレス）"
-
+git config --local user.name "dummy"
+git config --local user.email "dummy"
 ```
 
 
