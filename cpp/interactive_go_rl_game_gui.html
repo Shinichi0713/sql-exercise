@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Style Reinforcement Learning Go Game GUI</title>
+    <style>
+        :root {
+            --board-bg: #e0b35c;
+            --board-line: #2c1a04;
+            --panel-bg: #1e1e2e;
+            --panel-text: #cdd6f4;
+            --accent: #89b4fa;
+            --accent-green: #a6e3a1;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #11111b;
+            color: var(--panel-text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .board-container {
+            position: relative;
+            background-color: var(--board-bg);
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+
+        .controls-panel {
+            background-color: var(--panel-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background-color: #313244;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .stat-card.green {
+            border-left-color: var(--accent-green);
+        }
+
+        .stat-title {
+            font-size: 0.8em;
+            color: #a6adc8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        .btn {
+            background-color: #45475a;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.95em;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #585b70;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: #89b4fa;
+            color: #11111b;
+        }
+
+        .btn-primary:hover {
+            background-color: #b4befe;
+        }
+
+        .btn-danger {
+            background-color: #f38ba8;
+            color: #11111b;
+        }
+
+        .btn-danger:hover {
+            background-color: #f5e0dc;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .radio-label {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            background-color: #313244;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            border: 2px solid transparent;
+        }
+
+        .radio-label input {
+            display: none;
+        }
+
+        .radio-label.active {
+            border-color: var(--accent);
+            background-color: #45475a;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .slider-container label {
+            font-size: 0.85em;
+            color: #a6adc8;
+        }
+
+        input[type=range] {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>囲碁 GUI ＆ 強化学習（Q-Learning）シミュレーター</h1>
+
+    <div class="container">
+        <div class="board-container">
+            <canvas id="goCanvas" width="450" height="450"></canvas>
+        </div>
+
+        <div class="controls-panel">
+            <div class="stat-card">
+                <div class="stat-title">現在のステータス</div>
+                <div class="stat-value" id="turnDisplay">黒 (●) の番</div>
+            </div>
+
+            <div class="stat-card green">
+                <div class="stat-title">アゲハ (獲得した石)</div>
+                <div class="stat-value" id="capturesDisplay">黒: 0 | 白: 0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-title">AI学習状態 (Q-Table)</div>
+                <div class="stat-value" id="aiStatsDisplay">対局数: 0 | 記憶局面: 0</div>
+            </div>
+
+            <div>
+                <label class="stat-title">モード選択</label>
+                <div class="radio-group" style="margin-top: 5px;">
+                    <label class="radio-label active" id="modeHumanLabel">
+                        <input type="radio" name="mode" value="human" checked onchange="setMode('human')"> VS AI 対局
+                    </label>
+                    <label class="radio-label" id="modeTrainLabel">
+                        <input type="radio" name="mode" value="train" onchange="setMode('train')"> AI 高速自己学習
+                    </label>
+                </div>
+            </div>
+
+            <div class="slider-container" id="speedContainer" style="display: none;">
+                <label>学習スピード (1フレームあたりの対局ステップ数)</label>
+                <input type="range" id="speedSlider" min="1" max="100" value="20" oninput="updateSpeedLabel(this.value)">
+                <span id="speedValue" style="font-size: 0.8em; text-align: right; color: var(--accent);">20 ステップ/Frame</span>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetGame()">盤面をリセット</button>
+            <button class="btn btn-danger" onclick="clearQTable()">学習データを初期化</button>
+        </div>
+    </div>
+
+    <script>
+        const BOARD_SIZE = 5; // 5x5 Grid for fast learning
+        const CELL_SIZE = 70;
+        const MARGIN = 80;
+
+        const canvas = document.getElementById('goCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // State variables
+        let board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0)); // 0: empty, 1: black, 2: white
+        let currentTurn = 1; // 1: BLACK, 2: WHITE
+        let blackCaptures = 0;
+        let whiteCaptures = 0;
+        let isTraining = false;
+        let totalEpisodes = 0;
+        let qTable = {}; // State -> Array of Q values
+        let trainSpeed = 20;
+
+        // Offsets
+        const dr = [-1, 1, 0, 0];
+        const dc = [0, 0, -1, 1];
+
+        function isValid(r, c) {
+            return r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE;
+        }
+
+        function getBoardStateString() {
+            let str = "";
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    str += board[r][c];
+                }
+            }
+            str += (currentTurn === 1 ? "B" : "W");
+            return str;
+        }
+
+        function getGroupAndLiberties(r, c) {
+            const color = board[r][c];
+            if (color === 0) return { group: [], liberties: [] };
+
+            const group = [];
+            const liberties = new Set();
+            const visited = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(false));
+            const stack = [{r, c}];
+
+            visited[r][c] = true;
+
+            while (stack.length > 0) {
+                const curr = stack.pop();
+                group.push(curr);
+
+                for (let i = 0; i < 4; i++) {
+                    const nr = curr.r + dr[i];
+                    const nc = curr.c + dc[i];
+
+                    if (!isValid(nr, nc)) continue;
+
+                    if (board[nr][nc] === 0) {
+                        liberties.add(`${nr},${nc}`);
+                    } else if (board[nr][nc] === color && !visited[nr][nc]) {
+                        visited[nr][nc] = true;
+                        stack.push({r: nr, c: nc});
+                    }
+                }
+            }
+
+            return { group, liberties: Array.from(liberties) };
+        }
+
+        function playMove(r, c) {
+            if (!isValid(r, c) || board[r][c] !== 0) return -1;
+
+            const opponent = (currentTurn === 1) ? 2 : 1;
+            board[r][c] = currentTurn;
+
+            let captured = 0;
+            // 1. Capture opponent stones
+            for (let i = 0; i < 4; i++) {
+                const nr = r + dr[i];
+                const nc = c + dc[i];
+                if (isValid(nr, nc) && board[nr][nc] === opponent) {
+                    const { group, liberties } = getGroupAndLiberties(nr, nc);
+                    if (liberties.length === 0) {
+                        for (const p of group) {
+                            board[p.r][p.c] = 0;
+                            captured++;
+                        }
+                    }
+                }
+            }
+
+            if (currentTurn === 1) blackCaptures += captured;
+            else whiteCaptures += captured;
+
+            // 2. Suicide check
+            const { liberties: myLiberties } = getGroupAndLiberties(r, c);
+            if (myLiberties.length === 0 && captured === 0) {
+                board[r][c] = 0; // Revert
+                return -1;
+            }
+
+            currentTurn = opponent;
+            return captured;
+        }
+
+        // Q-Learning Agent Logic
+        const alpha = 0.2;
+        const gamma = 0.95;
+        const epsilon = 0.2;
+
+        function getQValues(stateStr) {
+            if (!qTable[stateStr]) {
+                qTable[stateStr] = Array(BOARD_SIZE * BOARD_SIZE).fill(0.0);
+            }
+            return qTable[stateStr];
+        }
+
+        function selectAction(stateStr) {
+            const validActions = [];
+            for (let a = 0; a < BOARD_SIZE * BOARD_SIZE; a++) {
+                const r = Math.floor(a / BOARD_SIZE);
+                const c = a % BOARD_SIZE;
+                if (board[r][c] === 0) validActions.push(a);
+            }
+
+            if (validActions.length === 0) return -1;
+
+            if (Math.random() < epsilon) {
+                return validActions[Math.floor(Math.random() * validActions.length)];
+            } else {
+                const qVals = getQValues(stateStr);
+                let bestAction = validActions[0];
+                let maxQ = -Infinity;
+                for (const a of validActions) {
+                    if (qVals[a] > maxQ) {
+                        maxQ = qVals[a];
+                        bestAction = a;
+                    }
+                }
+                return bestAction;
+            }
+        }
+
+        function updateQValue(state, action, reward, nextState) {
+            const qVals = getQValues(state);
+            const nextQVals = getQValues(nextState);
+            const maxNextQ = Math.max(...nextQVals);
+            qVals[action] += alpha * (reward + gamma * maxNextQ - qVals[action]);
+        }
+
+        function resetGame() {
+            board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0));
+            currentTurn = 1;
+            blackCaptures = 0;
+            whiteCaptures = 0;
+            updateUI();
+            drawBoard();
+        }
+
+        function clearQTable() {
+            qTable = {};
+            totalEpisodes = 0;
+            resetGame();
+        }
+
+        // Draw Board
+        function drawBoard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Lines
+            ctx.strokeStyle = "#2c1a04";
+            ctx.lineWidth = 2;
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                const pos = MARGIN + i * CELL_SIZE;
+                
+                ctx.beginPath();
+                ctx.moveTo(MARGIN, pos);
+                ctx.lineTo(MARGIN + (BOARD_SIZE - 1) * CELL_SIZE, pos);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(pos, MARGIN);
+                ctx.lineTo(pos, MARGIN + (BOARD_SIZE - 1) * CELL_SIZE);
+                ctx.stroke();
+            }
+
+            // Draw Stones
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    const x = MARGIN + c * CELL_SIZE;
+                    const y = MARGIN + r * CELL_SIZE;
+
+                    if (board[r][c] === 1) { // BLACK
+                        ctx.beginPath();
+                        ctx.arc(x, y, CELL_SIZE / 2 - 5, 0, Math.PI * 2);
+                        ctx.fillStyle = "#11111b";
+                        ctx.fill();
+                        ctx.strokeStyle = "#313244";
+                        ctx.stroke();
+                    } else if (board[r][c] === 2) { // WHITE
+                        ctx.beginPath();
+                        ctx.arc(x, y, CELL_SIZE / 2 - 5, 0, Math.PI * 2);
+                        ctx.fillStyle = "#f5e0dc";
+                        ctx.fill();
+                        ctx.strokeStyle = "#11111b";
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('turnDisplay').innerText = currentTurn === 1 ? "黒 (●) の番" : "白 (◯) の番";
+            document.getElementById('capturesDisplay').innerText = `黒: ${blackCaptures} | 白: ${whiteCaptures}`;
+            document.getElementById('aiStatsDisplay').innerText = `対局数: ${totalEpisodes} | 記憶局面: ${Object.keys(qTable).length}`;
+        }
+
+        // Canvas Click Listener (Human Input)
+        canvas.addEventListener('click', (e) => {
+            if (isTraining) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const c = Math.round((x - MARGIN) / CELL_SIZE);
+            const r = Math.round((y - MARGIN) / CELL_SIZE);
+
+            if (isValid(r, c) && board[r][c] === 0) {
+                // Human Move
+                const state = getBoardStateString();
+                const action = r * BOARD_SIZE + c;
+                const captured = playMove(r, c);
+
+                if (captured >= 0) {
+                    drawBoard();
+                    updateUI();
+
+                    // AI Counter-Move
+                    setTimeout(() => {
+                        if (currentTurn === 2) {
+                            const aiState = getBoardStateString();
+                            const aiAction = selectAction(aiState);
+                            if (aiAction !== -1) {
+                                const ar = Math.floor(aiAction / BOARD_SIZE);
+                                const ac = aiAction % BOARD_SIZE;
+                                playMove(ar, ac);
+                            } else {
+                                currentTurn = 1; // Pass
+                            }
+                            drawBoard();
+                            updateUI();
+                        }
+                    }, 200);
+                }
+            }
+        });
+
+        // Mode Switching
+        function setMode(mode) {
+            if (mode === 'train') {
+                isTraining = true;
+                document.getElementById('speedContainer').style.display = 'flex';
+                document.getElementById('modeTrainLabel').classList.add('active');
+                document.getElementById('modeHumanLabel').classList.remove('active');
+            } else {
+                isTraining = false;
+                document.getElementById('speedContainer').style.display = 'none';
+                document.getElementById('modeHumanLabel').classList.add('active');
+                document.getElementById('modeTrainLabel').classList.remove('active');
+            }
+        }
+
+        function updateSpeedLabel(val) {
+            trainSpeed = parseInt(val);
+            document.getElementById('speedValue').innerText = `${val} ステップ/Frame`;
+        }
+
+        // Main Loop for Self-Play Training
+        function gameLoop() {
+            if (isTraining) {
+                for (let k = 0; k < trainSpeed; k++) {
+                    const state = getBoardStateString();
+                    const action = selectAction(state);
+
+                    if (action === -1) {
+                        resetGame();
+                        totalEpisodes++;
+                        break;
+                    }
+
+                    const r = Math.floor(action / BOARD_SIZE);
+                    const c = action % BOARD_SIZE;
+                    const captured = playMove(r, c);
+
+                    let reward = 0;
+                    if (captured < 0) reward = -10.0;
+                    else reward = captured * 10.0 + 0.1;
+
+                    const nextState = getBoardStateString();
+                    updateQValue(state, action, reward, nextState);
+                }
+
+                drawBoard();
+                updateUI();
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Initialize Game
+        resetGame();
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+</html>
